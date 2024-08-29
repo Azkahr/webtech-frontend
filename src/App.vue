@@ -1,8 +1,8 @@
 <template>
-  <nav v-if="!isAdminRoute" class="navbar">
+  <nav class="navbar">
     <div class="nav-left">
       <img src="./assets/img/logo.png" alt="" class="nav-brand">
-      <div class="nav-items">
+      <div class="nav-items" v-if="!isAdminRoute">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/blog">Blog</RouterLink>
         <RouterLink to="/portfolio">Portfolio</RouterLink>

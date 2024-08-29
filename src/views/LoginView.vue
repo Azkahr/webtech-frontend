@@ -52,7 +52,9 @@ export default {
             }).then((data) => {
                 localStorage.setItem('token', data.data.access_token);
                 
-                this.router.push({ name : 'home' })
+                let route = data.data.role == 'admin' ? 'admin' : 'home'
+                
+                this.router.push({ name : route })
             }).catch(() => {
                 this.errorMessage = 'Login failed, please check your credentials'
             });

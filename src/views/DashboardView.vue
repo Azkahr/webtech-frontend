@@ -1,18 +1,4 @@
 <template>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-left">
-            <img src="../assets/img/logo.png" alt="" class="nav-brand">
-        </div>
-        <div class="navbar-right">
-            <div class="profile">
-                <img src="../assets/img/logo.png" alt="Profile Image" class="profile-img">
-                <p>Admin Name</p>
-            </div>
-            <a href="#" class="logout-btn">Logout</a>
-        </div>
-    </nav>
-
     <!-- Main Container -->
     <div class="dashboard-container">
         <!-- Sidebar -->
@@ -20,27 +6,122 @@
             <br>
             <ul class="menu">
                 <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">News</a></li>
-                <li><a href="#">Banner</a></li>
-                <li><a href="#">Portfolio</a></li>
             </ul>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
             <h2>Welcome to the Dashboard</h2>
+            <div class="category-section">
+                <h3>Category</h3>
+                <table class="table" style="margin-top: 10px">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="category in categories" :key="category.id">
+                            <td>{{ category.id }}</td>
+                            <td>{{ category.name }}</td>
+                            <td>hapus</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="blog-section" style="margin-top: 10px">
+                <h3>Blog</h3>
+                <table class="table" style="margin-top: 10px">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="blog in blog" :key="blog.id">
+                            <td>{{ blog.id }}</td>
+                            <td>{{ blog.title }}</td>
+                            <td>
+                                <RouterLink to="#" class="logout-btn">Edit</RouterLink>
+                                <RouterLink :to="{ name : 'blogDetail', params : { id: blog.id } }" class="logout-btn" style="margin-left: 5px; margin-right: 5px;">Detail</RouterLink>
+                                <RouterLink to="#" class="logout-btn">Delete</RouterLink>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </main>
     </div>
 </template>
 
 <script>
-export default {
+import { apiUrl } from '@/config/config';
 
+export default {
+  data() {
+    return {
+      blog : [],
+      categories : []
+    }
+  },
+  methods: {
+    getBlog() {
+      fetch(apiUrl + '/blog', {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        method: "GET",
+      }).then(response => {
+        if(!response.ok) throw new Error('Network response was not ok')
+
+        return response.json()
+      }).then(data => {
+        this.blog = data.data
+      });
+    },
+
+    getCategories() {
+        fetch(apiUrl + '/category', {
+            headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            },
+            method: "GET",
+        }).then(response => {
+            if(!response.ok) throw new Error('Network response was not ok')
+
+            return response.json()
+        }).then(data => {
+            this.categories = data.data
+        });
+    }
+  },
+  mounted() {
+    this.getBlog()
+    this.getCategories()
+  }
 }
 </script>
 
 <style scoped>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 10px;
+}
+
 * {
     margin: 0;
     padding: 0;
