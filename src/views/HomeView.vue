@@ -54,18 +54,18 @@
                     <p>Discover our exciting range of services! We're thrilled to offer two unique experiences for our users</p>
                 </div>
             </div>
-            <a href="#" class="blog animate">
+            <RouterLink to="#" class="blog animate">
                 <img src="../assets/img/logo.png" alt="" class="blog-img">
                 <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
+                    <p>Hey! Do you know that we have interesting game? You have to give it a shot!</p>
                 </div>
-            </a>
-            <a href="#" class="blog animate">
+            </RouterLink>
+            <RouterLink to="#" class="blog animate">
                 <img src="../assets/img/logo.png" alt="" class="blog-img">
                 <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
+                    <p>We also have a tools to design something called DSGN Illustration, try to scribble your idea there!</p>
                 </div>
-            </a>
+            </RouterLink>
         </section>
 
         <!-- portfolio -->
@@ -83,18 +83,12 @@
         <!-- testimonial -->
         <section class="testimonial">
             <h1>Testimonial</h1>
-            <a href="#" class="blog animate">
+            <RouterLink to="#" class="blog animate">
                 <img src="../assets/img/logo.png" alt="" class="blog-img">
                 <div class="blog-info">
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
                 </div>
-            </a>
-            <a href="#" class="blog animate">
-                <img src="../assets/img/logo.png" alt="" class="blog-img">
-                <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
-                </div>
-            </a>
+            </RouterLink>
         </section>
 
         <!-- blog -->
@@ -105,13 +99,13 @@
                 <form action="" method="get">
                     <div class="form-group">
                         <input type="text" class="input" placeholder="Search blog">
-                        <button type="submit" class="btn">Search</button>
+                        <button type="submit" class="btn" style="margin-left: 10px">Search</button>
                     </div>
                 </form>
             </div>
             
             <div class="news-wrapper">
-                
+                <BlogComponentHome v-for="blog in this.blog" :key="blog.id" :blog="blog"/>
             </div>
         </section>
     </div>
@@ -171,7 +165,7 @@ export default {
     },
 
     getBlog() {
-      fetch(apiUrl + '/banner', {
+      fetch(apiUrl + '/blog', {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
