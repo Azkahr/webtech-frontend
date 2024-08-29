@@ -3,18 +3,12 @@
         <!-- popular blog -->
         <section class="testimonial">
             <h1 align="center">Popular Blog</h1>
-            <a href="blog-detail.html" class="blog animate">
-                <img src="./assets/icons/logo.png" alt="" class="blog-img">
+            <RouterLink v-for="blog in this.blog" :key="blog.id" :to="{ name : 'blogDetail', params : { id: blog.id } }" class="blog animate">
+                <img :src="blog.image" alt="" class="blog-img">
                 <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
+                    <p>{{ blog.description }}</p>
                 </div>
-            </a>
-            <a href="blog-detail.html" class="blog animate">
-                <img src="./assets/icons/logo.png" alt="" class="blog-img">
-                <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
-                </div>
-            </a>
+            </RouterLink>
         </section>
         <!-- blog -->
         <section class="testimonial" style="margin-top: 40px;">
@@ -22,38 +16,72 @@
             <div class="categories">
                 <p>Categories : </p>
                 <div class="items">
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
-                    <a href="#" class="category-item animate">Category</a>
+                    <RouterLink v-for="category in this.categories" :key="category.id" to="#" class="category-item animate">{{ category.name }}</RouterLink>
                 </div>
             </div>
-            <a href="blog-detail.html" class="blog animate">
-                <img src="./assets/icons/logo.png" alt="" class="blog-img">
+            <RouterLink v-for="blog in this.blog" :key="blog.id" :to="{ name : 'blogDetail', params : { id: blog.id } }" class="blog animate">
+                <img :src="blog.image" alt="" class="blog-img">
                 <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
+                    <p>{{ blog.description }}</p>
                 </div>
-            </a>
-            <a href="blog-detail.html" class="blog animate">
-                <img src="./assets/icons/logo.png" alt="" class="blog-img">
-                <div class="blog-info">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nulla culpa exercitationem sed laudantium consequatur reiciendis corrupti accusamus tempore iste iure?</p>
-                </div>
-            </a>
+            </RouterLink>
         </section>
     </div>
+
+    <FooterComponent/>
 </template>
 
 <script>
-export default {
+import FooterComponent from '@/components/FooterComponent.vue';
+import { apiUrl } from '@/config/config';
 
+export default {
+  data() {
+    return {
+      blog : [],
+      categories : []
+    }
+  },
+  components : {
+    FooterComponent,
+  },
+  methods: {
+    getBlog() {
+      fetch(apiUrl + '/blog', {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        method: "GET",
+      }).then(response => {
+        if(!response.ok) throw new Error('Network response was not ok')
+
+        return response.json()
+      }).then(data => {
+        this.blog = data.data
+      });
+    },
+
+    getCategories() {
+        fetch(apiUrl + '/category', {
+            headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            },
+            method: "GET",
+        }).then(response => {
+            if(!response.ok) throw new Error('Network response was not ok')
+
+            return response.json()
+        }).then(data => {
+            this.categories = data.data
+        });
+    }
+  },
+  mounted() {
+    this.getBlog()
+    this.getCategories()
+  }
 }
 </script>
 

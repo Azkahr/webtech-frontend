@@ -1,75 +1,52 @@
 <template>
-  <nav class="navbar">
-      <div class="nav-left">
-          <img src="./assets/img/logo.png" alt="" class="nav-brand">
-          <div class="nav-items">
-            <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/about">Blog</RouterLink>
-            <a href="portfolio.html">Portfolio</a>
-          </div>
+  <nav v-if="!isAdminRoute" class="navbar">
+    <div class="nav-left">
+      <img src="./assets/img/logo.png" alt="" class="nav-brand">
+      <div class="nav-items">
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/blog">Blog</RouterLink>
+        <RouterLink to="/portfolio">Portfolio</RouterLink>
       </div>
-      <div class="logout">
-        <RouterLink :to="this.auth ? '#' : '/login'" class="logout-btn" @click.prevent="this.auth ? '' : this.logout()">{{ this.auth ? 'Logout' : 'Login' }}</RouterLink>
-      </div>
+    </div>
+    <div class="logout">
+      <RouterLink 
+        :to="authStore.isAuthenticated ? '#' : '/login'" 
+        class="logout-btn" 
+        @click.prevent="authStore.isAuthenticated ? handleLogout() : null"
+      >
+        {{ authStore.isAuthenticated ? 'Logout' : 'Login' }}
+      </RouterLink>
+    </div>
   </nav>
 
   <RouterView />
 </template>
 
-<script>
-import { apiUrl } from './config/config';
+<script setup>
+import { onMounted } from 'vue';
+import { useAuth } from './stores/auth';
+import { useRouter, useRoute } from 'vue-router';
+import { computed } from 'vue';
 
-export default {
-  data() {
-    return {
-      auth : true
-    }
-  },
-  methods: {
-    async authenticated() {
-      await fetch(apiUrl + '/auth/me', {
-          method: 'GET',
-          headers: {
-              "Accept": "application/json",
-              'Content-Type': 'application/json',
-              'Authorization' : 'Bearer ' + localStorage.getItem('token')
-          },
-      }).then((response) => {
-        this.auth = false
-      }).then((data) => {
-        this.auth = true
-      }).catch(() => {
-        this.auth = false
-      });
-    },
-    
-    async logout() {
-      await fetch(apiUrl + '/auth/logout', {
-          method: 'POST',
-          headers: {
-              "Accept": "application/json",
-              'Content-Type': 'application/json',
-              'Authorization' : 'Bearer ' + localStorage.getItem('token')
-          },
-      }).then(response => {
-          if(!response.ok) throw new Error('Network response was not ok')
+const authStore = useAuth();
+const router = useRouter();
+const route = useRoute();
 
-          return response.json()
-      }).then(() => {
-        localStorage.removeItem('token')
-        
-        this.router.push({ name : 'home' })
-      }).catch((error) => {
-          console.log(error);
-      });
-    }
-  },
-  mounted() {
-    this.authenticated();
-  }
-}
+const isAdminRoute = computed(() => {
+  return route.path.startsWith('/admin');
+});
+
+
+const handleLogout = async () => {
+  await authStore.logout();
+  router.push('/login');
+};
+
+onMounted(async () => {
+  await authStore.fetchUser();
+});
 </script>
 
 <style scoped>
-
+/* Your styles here */
 </style>
