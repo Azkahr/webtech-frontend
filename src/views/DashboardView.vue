@@ -1,14 +1,7 @@
 <template>
     <!-- Main Container -->
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <br>
-            <ul class="menu">
-                <li><a href="#">Dashboard</a></li>
-            </ul>
-        </aside>
-
+        <SidebarComponent/>
         <!-- Main Content -->
         <main class="main-content">
             <h2>Welcome to the Dashboard</h2>
@@ -26,14 +19,20 @@
                         <tr v-for="category in categories" :key="category.id">
                             <td>{{ category.id }}</td>
                             <td>{{ category.name }}</td>
-                            <td>hapus</td>
+                            <td>
+                                <RouterLink to="#" class="logout-btn">Edit</RouterLink>
+                                <RouterLink to="#" class="logout-btn" style="margin-left: 5px; margin-right: 5px;">Delete</RouterLink>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="blog-section" style="margin-top: 10px">
+            <div class="blog-section" style="margin-top: 20px">
                 <h3>Blog</h3>
+                <br>
+                <RouterLink :to="{ name : 'createBlog' }" class="logout-btn">Add Blog</RouterLink>
+                <br>
                 <table class="table" style="margin-top: 10px">
                     <thead>
                         <tr>
@@ -49,7 +48,34 @@
                             <td>
                                 <RouterLink to="#" class="logout-btn">Edit</RouterLink>
                                 <RouterLink :to="{ name : 'blogDetail', params : { id: blog.id } }" class="logout-btn" style="margin-left: 5px; margin-right: 5px;">Detail</RouterLink>
-                                <RouterLink to="#" class="logout-btn">Delete</RouterLink>
+                                <RouterLink to="#" @click.prevent="deleteData(blog.id, 'blog')" class="logout-btn">Delete</RouterLink>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="portfolio-section" style="margin-top: 20px">
+                <h3>Portfolio</h3>
+                <table class="table" style="margin-top: 10px">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="portfolio in portfolio" :key="portfolio.id">
+                            <td>{{ portfolio.id }}</td>
+                            <td>{{ portfolio.title }}</td>
+                            <td>
+                                <img :src="portfolio.image" :alt="portfolio.title" width="80">
+                            </td>
+                            <td>
+                                <RouterLink to="#" class="logout-btn">Edit</RouterLink>
+                                <RouterLink to="#" @click.prevent="deleteData(portfolio.id, 'portfolio')" class="logout-btn" style="margin-left: 5px; margin-right: 5px;">Delete</RouterLink>
                             </td>
                         </tr>
                     </tbody>
@@ -60,16 +86,54 @@
 </template>
 
 <script>
+import SidebarComponent from '@/components/SidebarComponent.vue';
 import { apiUrl } from '@/config/config';
 
 export default {
   data() {
     return {
+      portfolio : [],
       blog : [],
       categories : []
     }
   },
+  components: {
+    SidebarComponent
+  },
   methods: {
+    getPortfolioData() {
+      fetch(apiUrl + '/portfolio', {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        method: "GET",
+      }).then(response => {
+        if(!response.ok) throw new Error('Network response was not ok')
+
+        return response.json()
+      }).then(data => {
+        this.portfolio = data.data
+      });
+    },
+    
+    deleteData(id, url) {
+        fetch(apiUrl + '/'+ url +'/' + id, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization" : 'Bearer ' + localStorage.getItem('token')
+            },
+            method: "DELETE",
+        }).then(response => {
+            if(!response.ok) throw new Error('Network response was not ok')
+
+            return response.json()
+        }).then(() => {
+            location.reload()
+        });
+    },
+
     getBlog() {
       fetch(apiUrl + '/blog', {
         headers: {
@@ -103,6 +167,7 @@ export default {
     }
   },
   mounted() {
+    this.getPortfolioData()
     this.getBlog()
     this.getCategories()
   }
