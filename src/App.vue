@@ -9,7 +9,7 @@
           </div>
       </div>
       <div class="logout">
-          <a href="#" class="logout-btn">Logout</a>
+        <RouterLink :to="this.auth ? '#' : '/login'" class="logout-btn" @click.prevent="this.auth ? '' : this.logout()">{{ this.auth ? 'Logout' : 'Login' }}</RouterLink>
       </div>
   </nav>
 
@@ -17,7 +17,57 @@
 </template>
 
 <script>
+import { apiUrl } from './config/config';
 
+export default {
+  data() {
+    return {
+      auth : true
+    }
+  },
+  methods: {
+    async authenticated() {
+      await fetch(apiUrl + '/auth/me', {
+          method: 'GET',
+          headers: {
+              "Accept": "application/json",
+              'Content-Type': 'application/json',
+              'Authorization' : 'Bearer ' + localStorage.getItem('token')
+          },
+      }).then((response) => {
+        this.auth = false
+      }).then((data) => {
+        this.auth = true
+      }).catch(() => {
+        this.auth = false
+      });
+    },
+    
+    async logout() {
+      await fetch(apiUrl + '/auth/logout', {
+          method: 'POST',
+          headers: {
+              "Accept": "application/json",
+              'Content-Type': 'application/json',
+              'Authorization' : 'Bearer ' + localStorage.getItem('token')
+          },
+      }).then(response => {
+          if(!response.ok) throw new Error('Network response was not ok')
+
+          return response.json()
+      }).then(() => {
+        localStorage.removeItem('token')
+        
+        this.router.push({ name : 'home' })
+      }).catch((error) => {
+          console.log(error);
+      });
+    }
+  },
+  mounted() {
+    this.authenticated();
+  }
+}
 </script>
 
 <style scoped>

@@ -153,6 +153,11 @@ section .content {
     cursor: pointer;
 }
 
+.btn:hover {
+    background-color: black;
+    color: white;
+}
+
 footer {
     margin-bottom: 10px;
 }
