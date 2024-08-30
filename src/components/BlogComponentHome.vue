@@ -3,8 +3,9 @@
         <div class="card-head">
             <img :src="blog.image" :alt="blog.title">
         </div>
-        <div class="blog-info">
-            <p>{{ blog.description }}</p>
+        <div style="margin-top: 20px">
+            <h1>{{ blog.title }}</h1>
+            <p style="margin-top: 10px;">{{ blog.description }}</p>
         </div>
     </RouterLink>
 </template>

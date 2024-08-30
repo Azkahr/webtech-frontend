@@ -109,7 +109,7 @@ export default {
                 headers: {
                     "Accept": "application/json",
                     'Content-Type': 'application/json',
-                    'Authorization' : 'Bearer 2|Vn67MgHJerORY21zpe3NcX4FE4DckuToWDNk9SQa3eb02f35'
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
                 },
                 body: JSON.stringify(this.form),
             }).then(response => {
