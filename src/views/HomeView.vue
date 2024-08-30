@@ -54,18 +54,18 @@
                     <p>Discover our exciting range of services! We're thrilled to offer two unique experiences for our users</p>
                 </div>
             </div>
-            <RouterLink to="#" class="blog animate">
+            <a href="https://selekda-game.vercel.app/" target="_blank" class="blog animate">
                 <img src="../assets/img/logo.png" alt="" class="blog-img">
                 <div class="blog-info">
                     <p>Hey! Do you know that we have interesting game? You have to give it a shot!</p>
                 </div>
-            </RouterLink>
-            <RouterLink to="#" class="blog animate">
+            </a>
+            <a href="https://azkahr.github.io/selekda-paint/" target="_blank" class="blog animate">
                 <img src="../assets/img/logo.png" alt="" class="blog-img">
                 <div class="blog-info">
                     <p>We also have a tools to design something called DSGN Illustration, try to scribble your idea there!</p>
                 </div>
-            </RouterLink>
+              </a>
         </section>
 
         <!-- portfolio -->
